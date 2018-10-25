@@ -18,24 +18,37 @@ public class comparer {
 	JLabel label2 = null;
 	int count = 0;
 	int difference = 0;
+	boolean uploaded1 = false;
+	boolean uploaded2 = false;
 	
 	public void setImage1(BufferedImage image) { this.image1 = image; }
 	public void setImage2(BufferedImage image) { this.image2 = image; }
 	public void setLabel1(JLabel label) { this.label1 = label; }
 	public void setLabel2(JLabel label) { this.label2 = label; }
 	public void setDiff(int diff) { this.difference = diff; }
+	public void setUploaded1(boolean uploaded1) { this.uploaded1 = uploaded1; }
+	public void setUploaded2(boolean uploaded2) { this.uploaded2 = uploaded2; }
 	public BufferedImage getImage1() { return image1; }
 	public BufferedImage getImage2() { return image2; }
 	public JLabel getLabel1() { return label1; }
 	public JLabel getLabel2() { return label2; }
 	public int getDiff() { return difference; }
+	public boolean isUploaded1() { return uploaded1; }
+	public boolean isUploaded2() { return uploaded2; }
 
-	
+
+
+	Color color1 = new Color(2, 23, 46);
+	Color color2 = Color.LIGHT_GRAY;
+	Color color3 = new Color(18, 68, 122);
+	Font tr = new Font("ArialBlack", Font.PLAIN, 18);
 	
 	public void createGUI() {
 		JFrame frame = new JFrame("Image Comparer");
 		frame.setSize(1000, 500);
 		
+		
+		frame.getContentPane().setBackground(color1);
 		JMenuBar mb = new JMenuBar();
 		JMenu m1 = new JMenu("File");
 		JMenu m2 = new JMenu("Help");
@@ -53,6 +66,18 @@ public class comparer {
 		m2.add(m22);
 		
 		JButton button = new JButton("Compare");
+		button.setBackground(color3);
+		button.setForeground(color2);
+		button.setFont(tr);
+		button.setOpaque(true);
+		button.setBorderPainted(false);
+		
+		JPanel panel1 = new JPanel();
+		JPanel panel2 = new JPanel();
+		panel1.setBackground(color1);
+		panel2.setBackground(color1);
+		frame.getContentPane().add(BorderLayout.WEST, panel1);
+		frame.getContentPane().add(BorderLayout.EAST, panel2);
 		
 		final JFileChooser fc = new JFileChooser();
 		
@@ -99,15 +124,15 @@ public class comparer {
 					frame.remove(label1);
 					frame.remove(label2);
 				}
-				addImageOne(getLabel1(), frame);
-				addImageTwo(getLabel2(), frame);
+				panel1.add(getLabel1());
+				panel2.add(getLabel2());
 				testImage(getImage1(), getImage2());
 				count++;
 				frame.repaint();
 				frame.revalidate();
 			}
 		});
-		
+
 		frame.getContentPane().add(BorderLayout.SOUTH, button);
 		frame.getContentPane().add(BorderLayout.NORTH, mb);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,10 +143,30 @@ public class comparer {
 	public void chooseImage(BufferedImage image) {
 		JFrame frame = new JFrame("Choose Image");
 		frame.setSize(300, 200);
+		frame.getContentPane().setBackground(color1);
 		JButton button1 = new JButton("Image 1");
 		JButton button2 = new JButton("Image 2");
-		frame.getContentPane().add(BorderLayout.WEST, button1);
-		frame.getContentPane().add(BorderLayout.EAST, button2);
+		button1.setBackground(color3);
+		button2.setBackground(color3);
+		button1.setForeground(color2);
+		button2.setForeground(color2);
+		button1.setFont(tr);
+		button2.setFont(tr);
+		button1.setOpaque(true);
+		button2.setOpaque(true);
+		button1.setBorderPainted(false);
+		button2.setBorderPainted(false);
+		JPanel panel1 = new JPanel();
+		JPanel panel2 = new JPanel();
+		panel1.setBackground(color1);
+		panel2.setBackground(color1);
+		panel1.setLayout(new BorderLayout());
+		panel2.setLayout(new BorderLayout());
+		panel1.add(BorderLayout.CENTER, button1);
+		panel2.add(BorderLayout.CENTER, button2);
+		frame.getContentPane().add(BorderLayout.WEST, panel1);
+		frame.getContentPane().add(BorderLayout.EAST, panel2);
+		
 		frame.setVisible(true);
 		button1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -164,23 +209,21 @@ public class comparer {
 		return bimage;
 	}
 	
-	public void addImageOne(JLabel label, JFrame frame) {
-		frame.getContentPane().add(BorderLayout.WEST, label);
-	}
-	
-	public void addImageTwo(JLabel label, JFrame frame) {
-		frame.getContentPane().add(BorderLayout.EAST, label);
-	}
 	
 	public void showResult(boolean res) {
 		JFrame frame = new JFrame("Result");
 		frame.setSize(300, 50);
+		frame.getContentPane().setBackground(color1);
 		if(res == true) {
 			JLabel label1 = new JLabel("The images are the same");
+			label1.setFont(tr);
+			label1.setForeground(color3);
 			frame.getContentPane().add(BorderLayout.CENTER, label1);
 		}
 		else {
 			JLabel label2 = new JLabel("The images are not the same");
+			label2.setFont(tr);
+			label2.setForeground(color3);
 			frame.getContentPane().add(BorderLayout.CENTER, label2);
 		}
 		frame.setVisible(true);
@@ -207,9 +250,20 @@ public class comparer {
 		if(total == 0 && sameSize == true) {
 			showResult(true);
 		}
-		else {
+		else if(total != 0 && sameSize == true) {
 			showResult(false);
 		}
+	}
+	
+	public void errorMessage() {
+		JFrame frame = new JFrame("Error");
+		frame.setSize(100, 50);
+		frame.setBackground(color1);
+		JLabel label = new JLabel("Error: Please upload an image for both images");
+		label.setFont(tr);
+		label.setForeground(color3);
+		frame.getContentPane().add(BorderLayout.CENTER, label1);
+		frame.setVisible(true);
 	}
 	
 }
